@@ -4,7 +4,6 @@
 
 #include "database.h"
 #include "postings.h"
-#include "util.h"
 
 /**
  * 检查输入的字符（UTF-32）是否不属于索引对象
