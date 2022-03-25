@@ -14,3 +14,10 @@
 * token_posting_list
 * merge_inverted_index
 
+
+### token_to_postings_list
+* db_get_token_id
+* create_new_inverted_index 新建倒排索引
+* create_new_postings_list  新建倒排列表
+
+malloc 内存分配
