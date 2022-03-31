@@ -2,23 +2,31 @@ package internal
 
 // MergePostings merge two postings list
 func MergePostings(pa, pb *PostingsList) *PostingsList {
+	ret := new(PostingsList)
 	p := new(PostingsList)
-	temp := new(PostingsList)
-	for pa != nil && pb != nil {
-		if pa.DocID <= pb.DocID {
-			p.next = pa
+	p = nil
+	for pa != nil || pb != nil {
+
+		temp := new(PostingsList)
+		if pb == nil || (pa != nil && pa.DocID <= pb.DocID) {
+			temp = pa
 			pa = pa.next
-		} else {
-			p.next = pb
+		} else if pa == nil || (pb != nil && pa.DocID > pb.DocID) {
+			temp = pb
 			pb = pb.next
+		} else {
+			break
 		}
-	}
-	if pa != nil {
-		p.next = pa
-	}
-	if pb != nil {
-		p.next = pb
+		temp.next = nil
+
+		if p == nil {
+			ret.next = temp
+		} else {
+			p.next = temp
+		}
+
+		p = temp
 	}
 
-	return p
+	return ret.next
 }
