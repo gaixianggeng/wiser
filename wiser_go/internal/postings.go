@@ -38,7 +38,8 @@ func MergeInvertedIndex(base, toBeAdded *InvertedIndexHash) {
 		if toBeAddedIndex, ok := (*toBeAdded)[tokenID]; ok {
 			index.postingList = MergePostings(index.postingList, toBeAddedIndex.postingList)
 			index.docsCount += toBeAddedIndex.docsCount
-			index.positionCount += toBeAddedIndex.positionCount
+			//TODO: 不确定要不要加 先todo
+			// index.positionCount += toBeAddedIndex.positionCount
 			delete(*toBeAdded, tokenID)
 		}
 	}
@@ -46,18 +47,29 @@ func MergeInvertedIndex(base, toBeAdded *InvertedIndexHash) {
 		(*base)[tokenID] = index
 	}
 
-	// inverted_index_value *p, *temp;
-
-	// HASH_ITER(hh, to_be_added, p, temp) {
-	//     inverted_index_value *t;
-	//     HASH_DEL(to_be_added, p);
-	//     HASH_FIND_INT(base, &p->token_id, t);
-	//     if (t) {
-	//         t->postings_list = merge_postings(t->postings_list, p->postings_list);
-	//         t->docs_count += p->docs_count;
-	//         free(p);
-	//     } else {
-	//         HASH_ADD_INT(base, token_id, p);
-	//     }
-	// }
 }
+
+// /**
+//  * 将内存上（小倒排索引中）的倒排列表与存储器上的倒排列表合并后存储到数据库中
+//  * @param[in] env 存储着应用程序运行环境的结构体
+//  * @param[in] p 含有倒排列表的倒排索引中的索引项
+//  */
+// void update_postings(const wiser_env *env, inverted_index_value *p) {
+//     int old_postings_len;
+//     postings_list *old_postings;
+
+//     if (!fetch_postings(env, p->token_id, &old_postings, &old_postings_len)) {
+//         buffer *buf;
+//         if (old_postings_len) {
+//             p->postings_list = merge_postings(old_postings, p->postings_list);
+//             p->docs_count += old_postings_len;
+//         }
+//         if ((buf = alloc_buffer())) {
+//             encode_postings(env, p->postings_list, p->docs_count, buf);
+//             db_update_postings(env, p->token_id, p->docs_count, BUFFER_PTR(buf), BUFFER_SIZE(buf));
+//             free_buffer(buf);
+//         }
+//     } else {
+//         print_error("cannot fetch old postings list of token(%d) for update.", p->token_id);
+//     }
+// }
