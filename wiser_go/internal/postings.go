@@ -1,5 +1,9 @@
 package internal
 
+import (
+	"fmt"
+)
+
 // MergePostings merge two postings list
 // https://leetcode-cn.com/problems/he-bing-liang-ge-pai-xu-de-lian-biao-lcof/
 func MergePostings(pa, pb *PostingsList) *PostingsList {
@@ -47,6 +51,41 @@ func MergeInvertedIndex(base, toBeAdded *InvertedIndexHash) {
 		(*base)[tokenID] = index
 	}
 
+}
+
+// 解码
+func decodePostingsNone() {
+
+}
+
+// 编码
+func encodePostingsNone() {
+
+}
+
+func fetchPostings(tokenID int64) (*PostingsList, int64, error) {
+
+	return nil, 0, nil
+}
+
+func updatePostings(p *InvertedIndexValue) error {
+	if p == nil {
+		fmt.Println("updatePostings p is nil")
+		return nil
+	}
+	// 拉取数据库数据
+	oldPostings, size, err := fetchPostings(p.TokenID)
+	if err != nil {
+		return fmt.Errorf("updatePostings fetchPostings err: %v", err)
+	}
+	// merge
+	if size > 0 {
+		p.postingList = MergePostings(oldPostings, p.postingList)
+		p.docsCount += size
+	}
+	// 开始写入数据库
+
+	return nil
 }
 
 // /**

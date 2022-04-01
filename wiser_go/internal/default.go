@@ -1,5 +1,9 @@
 package internal
 
+// Engine 引擎结构体
+type Engine struct {
+}
+
 //InvertedIndexValue 倒排索引
 type InvertedIndexValue struct {
 	TokenID       int64
