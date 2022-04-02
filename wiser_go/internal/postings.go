@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"bytes"
 	"fmt"
 )
 
@@ -54,12 +55,33 @@ func MergeInvertedIndex(base, toBeAdded *InvertedIndexHash) {
 }
 
 // 解码
-func decodePostingsNone() {
+func decodePostings() {
 
 }
 
 // 编码
-func encodePostingsNone() {
+// bytes.Buffer
+func encodePostings(postings *PostingsList, docCount int64) *bytes.Buffer {
+	buf := bytes.NewBuffer([]byte{})
+
+	return buf
+
+	// static int encode_postings_none(
+	// const postings_list *postings,
+	// const int postings_len,
+	// buffer *postings_e) {
+	//     const postings_list *p;
+
+	//     LL_FOREACH(postings, p) {
+	//         int *pos = NULL;
+	//         append_buffer(postings_e, (void *)&p->document_id, sizeof(int));
+	//         append_buffer(postings_e, (void *)&p->positions_count, sizeof(int));
+	//         while ((pos = (int *)utarray_next(p->positions, pos))) {
+	//             append_buffer(postings_e, (void *)pos, sizeof(int));
+	//         }
+	//     }
+	//     return 0;
+	// }
 
 }
 
@@ -84,6 +106,9 @@ func updatePostings(p *InvertedIndexValue) error {
 		p.docsCount += size
 	}
 	// 开始写入数据库
+	buf := encodePostings(p.postingList, p.docsCount)
+
+	DBUpdatePostings(p.TokenID, p.docsCount, buf, int64(buf.Len()))
 
 	return nil
 }
@@ -105,6 +130,7 @@ func updatePostings(p *InvertedIndexValue) error {
 //         }
 //         if ((buf = alloc_buffer())) {
 //             encode_postings(env, p->postings_list, p->docs_count, buf);
+// 				// #define BUFFER_PTR(b) ((b)->head)              /* 返回指向缓冲区开头的指针 */
 //             db_update_postings(env, p->token_id, p->docs_count, BUFFER_PTR(buf), BUFFER_SIZE(buf));
 //             free_buffer(buf);
 //         }
