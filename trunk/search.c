@@ -95,10 +95,10 @@ static int search_phrase(const query_token_hash* query_tokens, doc_search_cursor
         /* 初始化游标 */
         for (i = 0, cur = cursors, qt = query_tokens; qt; i++, qt = qt->hh.next) {
             int* pos = NULL;
-            while ((pos = (int*)utarray_next(qt->postings_list->positions, pos))) {
+            while ((pos = (int*)utarray_next(qt->postings_list->positions, pos))) { // 获取pos后一个元素
                 cur->base = *pos;
                 cur->positions = doc_cursors[i].current->positions;
-                cur->current = (int*)utarray_front(cur->positions);
+                cur->current = (int*)utarray_front(cur->positions); // 获取第一个元素
                 cur++;
             }
         }
